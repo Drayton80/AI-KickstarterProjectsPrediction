@@ -1,6 +1,9 @@
 import pandas as pandaObj
 import numpy  as numpyObj
 
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeRegressor
+
 dataFrame = pandaObj.read_csv("ks-projects-201801.csv")
 dataFrame = dataFrame[['category', 'main_category', 'deadline', 'launched', 'state', 'country', 'usd_pledged_real', 'usd_goal_real']]
 
@@ -83,6 +86,37 @@ dataFrame['duration'] = duration
 
 print(dataFrame)
 
+# Cria um atributo para cada gênero que existe para poder transformá-los de classe para número, já que é um
+# problema de regressão e precisa apenas de número
+dataFrameAuxiliary = pandaObj.DataFrame(index = dataFrame.index)
+
+for column, columnData in dataFrame.iteritems():   
+    if columnData.dtype == object:
+    	# Faz o 0 e 1 direitinho:
+        columnData = pandaObj.get_dummies(columnData, prefix = column)
+        
+    dataFrameAuxiliary = dataFrameAuxiliary.join(columnData)
+    
+dataFrame = dataFrameAuxiliary
+
+# x e y são duas variáveis são convensões para o nome de duas variáveis que têm o seguinte significado:
+#	x é o data frame sem o atributo de saída, ou seja, as entradas 
+#	y é o data frame apenas com a saída
+x = numpyObj.array(dataFrame.drop(['duration'], 1))
+y = numpyObj.array(dataFrame['duration'])
+# train_test_split é o nosso treinamento dos sets (o split funciona como o cross validation, o cross validation
+# em si foi decreptado) 0.2 significa que tá dividindo em 5 folds (se fosse dividir em 10 seria 0.1)
+# Cria tbm o x e y de teste e de treino
+xTrain, yTrain, xTest, yTest = train_test_split(x, y, test_size=0.2, random_state = 2)
+
+# Rodando todos os métodos de Machine learning:
+decisionTree = DecisionTreeRegressor(random_state = 4) # Mudar outrs parametros é aqui dentro
+# Para treinar
+decisionTree.fit(xTrain, yTrain)
+# Para testar
+accuracyTree = decisionTree.score(xTest, yTest)
+
+print("\n\nAcuracia da Arvore de decisão:", accuracyTree)
 
 
 
