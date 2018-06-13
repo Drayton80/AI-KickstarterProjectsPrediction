@@ -9,12 +9,12 @@ def atributoNeutro(df):
 	new_df = pd.DataFrame(df)
 	#print(new_df['LvL Adjustment'].tail())
 	for atributo in new_df:
-		#print(atributo)
+		print(atributo)
 		i = 0		
 		if(atributo == 'state'):
 			aux = new_df[atributo].tolist() 
 			for elemento in aux:
-				# print(i,elemento)
+				print(i,elemento)
 				if(elemento == "suspended"):
 					new_df.drop(i, inplace = True)				
 						
@@ -25,6 +25,9 @@ def atributoNeutro(df):
 					new_df.drop(i, inplace = True)	
 
 				if(elemento == "failed"):
+					new_df.drop(i, inplace = True)	
+
+				if(elemento == "live"):
 					new_df.drop(i, inplace = True)			
 				i+=1			
 	#print(new_df['LvL Adjustment'].tail())
@@ -89,18 +92,42 @@ def convertToDays(date):
 	#|print("Dias após dias", days)
 	return days
 
+
+def deleteNoise(df):
+	new_df = pd.DataFrame(df)
+	#print(new_df['LvL Adjustment'].tail())
+	for atributo in new_df:
+		print(atributo)
+		i = 0		
+		if(atributo == 'usd pledged'):
+			aux = new_df[atributo].tolist() 
+			for elemento in aux:
+				print(i,elemento)
+				if(elemento == 0.0):
+					new_df.drop(i, inplace = True)				
+			
+				i+=1			
+	#print(new_df['LvL Adjustment'].tail())
+	return new_df
+
 #=======================#========================================================================================================#
 
 #=#====================#=#=====================================================================================================#=#
 #=# INICIO DO PROGRAMA #=#=#===================================================================================================#=#=#
 #=#====================#=#=====================================================================================================#=#
 
-dataFrame = pd.read_csv("ks-projects-201801")
+dataFrame = pd.read_csv("ks-projects-201801-preprocessed-complete.csv")
 
+'''
 print(len(dataFrame))
 dataFrame = atributoNeutro(dataFrame)
-dataFrame.to_csv("ks-projects-201801-preprocessed-incomplete")
+dataFrame.to_csv("ks-projects-201801-preprocessed-incomplete2")
 print(len(dataFrame))
+'''
+
+dataFrame = deleteNoise(dataFrame)
+
+# dataFrame = dataFrame[[ 'main_category', 'currency', 'deadline', 'launched', 'country', 'usd pledged', 'usd_goal_real']]
 
 initialDay = []	# No formato de data ano-mês-dia
 finalDay = []	# No formato de data ano-mês-dia
@@ -109,6 +136,7 @@ dictionary = []
 
 #print(dataFrame.tail())
 
+'''
 counter = 0
 for dateBegin in dataFrame['launched']:
 	initialDay.append(convertToDays(dateBegin))
@@ -125,6 +153,7 @@ for dateEnd in dataFrame['deadline']:
 
 dataFrame = dataFrame.drop(['deadline', 'launched'], 1)
 dataFrame['duration'] = duration
+'''
 
 print(dataFrame)
 
