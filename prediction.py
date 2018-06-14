@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy  as np
-import matplotlib.pyplot as plt
 
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeRegressor
@@ -19,7 +18,7 @@ from sklearn.linear_model import RidgeCV
 
 dataFrame = pd.read_csv("ks-projects-201801-preprocessed-complete2.csv")
 dataFrame.dropna(inplace = True)
-dataFrame.drop(['usd pledged'], axis = 1)
+# dataFrame.drop(['usd_goal_real'], axis = 1)
 # Aqui é deletado todos as linhas de 40000 até o final da tabela, sendo isso feito pois com o número original
 # havia um erro de memória devida ao número muito grande de elementos
 #dataFrame = dataFrame.drop(range(200001, len(dataFrame)))
@@ -29,8 +28,8 @@ print(dataFrame)
 # x e y são duas variáveis são convensões para o nome de duas variáveis que têm o seguinte significado:
 #	x é o data frame sem o atributo de saída, ou seja, as entradas 
 #	y é o data frame apenas com a saída
-x = np.array(dataFrame.drop(['usd_goal_real'], axis = 1)).astype(float)
-y = np.array(dataFrame['usd_goal_real'])
+x = np.array(dataFrame.drop(['usd pledged'], axis = 1)).astype(float)
+y = np.array(dataFrame['usd pledged'])
 
 
 # 1ª Tamanho de Teste #-------------------------------------------------------------------------------------------------#

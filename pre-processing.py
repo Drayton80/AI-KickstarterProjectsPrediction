@@ -116,27 +116,20 @@ def deleteNoise(df):
 #=# INICIO DO PROGRAMA #=#=#===================================================================================================#=#=#
 #=#====================#=#=====================================================================================================#=#
 
-dataFrame = pd.read_csv("ks-projects-201801-preprocessed-complete.csv")
+dataFrame = pd.read_csv("ks-projects-201801.csv")
 
-'''
 print(len(dataFrame))
 dataFrame = atributoNeutro(dataFrame)
-dataFrame.to_csv("ks-projects-201801-preprocessed-incomplete2")
+dataFrame.to_csv("ks-projects-201801-preprocessed-incomplete")
 print(len(dataFrame))
-'''
 
 dataFrame = deleteNoise(dataFrame)
-
 # dataFrame = dataFrame[[ 'main_category', 'currency', 'deadline', 'launched', 'country', 'usd pledged', 'usd_goal_real']]
 
 initialDay = []	# No formato de data ano-mês-dia
 finalDay = []	# No formato de data ano-mês-dia
 duration = []	# No formato convertido para dias
-dictionary = []
 
-#print(dataFrame.tail())
-
-'''
 counter = 0
 for dateBegin in dataFrame['launched']:
 	initialDay.append(convertToDays(dateBegin))
@@ -153,13 +146,11 @@ for dateEnd in dataFrame['deadline']:
 
 dataFrame = dataFrame.drop(['deadline', 'launched'], 1)
 dataFrame['duration'] = duration
-'''
 
 print(dataFrame)
 
 # Cria um atributo para cada gênero que existe para poder transformá-los de classe para número, já que é um
 # problema de regressão e precisa apenas de número
-
 dataFrameAuxiliary = pd.DataFrame(index = dataFrame.index)
 
 for column, columnData in dataFrame.iteritems():   
